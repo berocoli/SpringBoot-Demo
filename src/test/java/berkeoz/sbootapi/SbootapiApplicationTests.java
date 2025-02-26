@@ -1,0 +1,13 @@
+package berkeoz.sbootapi;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class SbootapiApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
