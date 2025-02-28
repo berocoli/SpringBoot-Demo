@@ -26,12 +26,12 @@ public class OrderController {
 		return this.orderService.getAll();
 	}
 	
-	@GetMapping("/get_by_employee_id")
+	@GetMapping("/get-by-employee-id")
 	public DataResult<Order> getByEmployeeId(int employeeId){
 		return this.orderService.getByEmployeeId(employeeId);
 	}
 	
-	@GetMapping("/get_by_customer_id")
+	@GetMapping("/get-by-customer-id")
 	public DataResult<List<Order>> getByCustomerId(String customerId){
 		return this.orderService.getByCustomerId(customerId);
 	}

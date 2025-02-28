@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import berkeoz.sbootapi.entities.concretes.Order;
 
-public interface OrderDao extends JpaRepository<Order, Integer>{
+public interface OrderDao extends JpaRepository<Order, Integer> {
 	Order getByEmployee_EmployeeId(int employeeId);
 	List<Order> getByCustomer_CustomerId(String customerId);	
 }

@@ -1,13 +1,20 @@
 package berkeoz.sbootapi.business.concretes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
+import org.apache.logging.log4j.CloseableThreadContext.Instance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import berkeoz.sbootapi.business.abstracts.IProductService;
+import berkeoz.sbootapi.business.dtos.productDtos.PaginatedProductDto;
+import berkeoz.sbootapi.business.dtos.productDtos.ProductDto;
+import berkeoz.sbootapi.business.mappers.ProductMapper;
 import berkeoz.sbootapi.core.utilities.results.DataResult;
 import berkeoz.sbootapi.core.utilities.results.Result;
 import berkeoz.sbootapi.core.utilities.results.SuccessDataResult;
@@ -19,21 +26,32 @@ import berkeoz.sbootapi.entities.concretes.Product;
 public class ProductService implements IProductService {
 
 	private ProductDao productDao;
+	private final ProductMapper mapper;
 
 	@Autowired
-	public ProductService(ProductDao productDao) {
+	public ProductService(ProductDao productDao, ProductMapper mapper) {
 		this.productDao = productDao;
+		this.mapper = mapper;
 	}
 
 	@Override
 	public DataResult<List<Product>> getAll() {
 		return new SuccessDataResult<List<Product>>(this.productDao.findAll(), "Data listed.");
 	}
-
+	
 	@Override
-	public DataResult<List<Product>> getAll(int pageNumber, int pageSize) {
+	public DataResult<PaginatedProductDto> getAll(int pageNumber, int pageSize) {
 		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-		return new SuccessDataResult<List<Product>>(this.productDao.findAll(pageable).getContent());
+        Page<Product> productPage = productDao.findAll(pageable);
+
+        // Convert List<Product> to List<ProductDto>
+        List<ProductDto> productDtos = mapper.toProductDtoList(productPage.getContent());
+
+        // Create DTO response
+        PaginatedProductDto response = new PaginatedProductDto(productDtos, productPage.getTotalPages());
+
+	    
+	    return new SuccessDataResult<>(response);
 	}
 
 	@Override
